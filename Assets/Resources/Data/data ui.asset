@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: data ui
   m_EditorClassIdentifier: 
   prefabMainView: {fileID: 6459193451736370178, guid: 86120c57480ac7249a6d52b9c07d479a, type: 3}
+  prefabMenuButton: {fileID: 9172125858269188631, guid: 29630b855ece0c04ba42218cda258e18, type: 3}

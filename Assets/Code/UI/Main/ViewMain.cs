@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Code.UI.Menu;
+using UnityEngine;
 
 namespace Code.UI.Main
 {
@@ -6,6 +7,8 @@ namespace Code.UI.Main
         MonoBehaviour,
         IMainView
     {
-        
+        [SerializeField] private ViewMenu _viewMenu;
+
+        public ViewMenu ViewMenu => _viewMenu;
     }
 }
