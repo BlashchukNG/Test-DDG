@@ -73,23 +73,13 @@ namespace Code.UI
                     timer.time = 0;
                 }
 
-                timer.text.text = GetTimeString((int)timer.time);
+                timer.text.text = TimerHelper.GetTimeString((int)timer.time);
             }
 
             if (_view.ViewTimer.Enabled && _timers[_currentTimer].enabled)
             {
-                _view.ViewTimer.UpdateTimer(GetTimeString((int)_timers[_currentTimer].time));
+                _view.ViewTimer.UpdateTimer(TimerHelper.GetTimeString((int)_timers[_currentTimer].time));
             }
-        }
-
-        private string GetTimeString(int time)
-        {
-            var total = time % (24 * 3600);
-            var h = total / 3600;
-            total %= 3600;
-            var m = total / 60;
-            var s = total % 60;
-            return $"{h:00}:{m:00}:{s:00}";
         }
     }
 }

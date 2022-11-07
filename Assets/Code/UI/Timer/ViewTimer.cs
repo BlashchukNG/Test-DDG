@@ -11,6 +11,7 @@ namespace Code.UI.Timer
         ITimerView
     {
         private const float SHOW_HIDE_DURATION = 0.3f;
+        private const int ADD_SECONDS_VALUE = 60;
 
         [SerializeField] private Canvas _canvas;
         [SerializeField] private Button _btnMinus;
@@ -38,17 +39,17 @@ namespace Code.UI.Timer
 
         private void Minus()
         {
-            _data.time -= 60;
+            _data.time -= ADD_SECONDS_VALUE;
             if (_data.time < 0) _data.time = 0;
 
-            UpdateTimer((int)_data.time);
+            UpdateTimer(TimerHelper.GetTimeString((int)_data.time));
         }
 
         private void Plus()
         {
-            _data.time += 60;
+            _data.time += ADD_SECONDS_VALUE;
 
-            UpdateTimer((int)_data.time);
+            UpdateTimer(TimerHelper.GetTimeString((int)_data.time));
         }
 
         private void StartTimer()
@@ -61,7 +62,7 @@ namespace Code.UI.Timer
         {
             _data = data;
             SetButtonsInteractable(!_data.enabled);
-            UpdateTimer((int)_data.time);
+            UpdateTimer(TimerHelper.GetTimeString((int)_data.time));
         }
 
         private void SetButtonsInteractable(bool flag)
@@ -103,17 +104,6 @@ namespace Code.UI.Timer
                 _showSequence.Join(text.DOColor(Color.white, SHOW_HIDE_DURATION));
             foreach (var image in transform.GetComponentsInChildren<RawImage>())
                 _showSequence.Join(image.DOColor(Color.white, SHOW_HIDE_DURATION));
-        }
-
-        private void UpdateTimer(int time)
-        {
-            var total = time % (24 * 3600);
-            var h = total / 3600;
-            total %= 3600;
-            var m = total / 60;
-            var s = total % 60;
-
-            UpdateTimer($"{h:00}:{m:00}:{s:00}");
         }
 
         private void ClearView()
