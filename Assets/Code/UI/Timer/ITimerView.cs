@@ -1,4 +1,5 @@
-﻿using Code.UI.Interfaces;
+﻿using System;
+using Code.UI.Interfaces;
 
 namespace Code.UI.Timer
 {
@@ -6,6 +7,8 @@ namespace Code.UI.Timer
         IView
     {
         bool Enabled { get; }
-        void UpdateTimer(int time);
+        event Action onCloseView;
+        void UpdateTimer(string msg);
+        void SetSettings(TimerData data);
     }
 }

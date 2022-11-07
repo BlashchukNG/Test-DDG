@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,33 +13,75 @@ namespace Code.UI.Timer
         private const float SHOW_HIDE_DURATION = 0.3f;
 
         [SerializeField] private Canvas _canvas;
-        [SerializeField] private Button btnMinus;
-        [SerializeField] private Button btnPlus;
-        [SerializeField] private Button btnStart;
-        [SerializeField] private TMP_Text txtTimer;
+        [SerializeField] private Button _btnMinus;
+        [SerializeField] private Button _btnPlus;
+        [SerializeField] private Button _btnStart;
+        [SerializeField] private Button _btnClose;
+        [SerializeField] private TMP_Text _txtTimer;
 
         private Sequence _showSequence;
+        private TimerData _data;
 
         public bool Enabled => _canvas.enabled;
+
+        public event Action onCloseView = () => { };
 
         private void Awake()
         {
             ClearView();
+
+            _btnMinus.onClick.AddListener(Minus);
+            _btnPlus.onClick.AddListener(Plus);
+            _btnStart.onClick.AddListener(StartTimer);
+            _btnClose.onClick.AddListener(() => onCloseView.Invoke());
         }
 
-        public void UpdateTimer(int time)
+        private void Minus()
         {
-            var hours = time / 3600;
-            var minutes = time % 3600;
-            var seconds = time % 60;
+            _data.time -= 60;
+            if (_data.time < 0) _data.time = 0;
 
-            txtTimer.text = $"{hours}:{minutes}:{seconds}";
+            UpdateTimer((int)_data.time);
+        }
+
+        private void Plus()
+        {
+            _data.time += 60;
+
+            UpdateTimer((int)_data.time);
+        }
+
+        private void StartTimer()
+        {
+            _data.enabled = true;
+            SetButtonsInteractable(false);
+        }
+
+        public void SetSettings(TimerData data)
+        {
+            _data = data;
+            SetButtonsInteractable(!_data.enabled);
+            UpdateTimer((int)_data.time);
+        }
+
+        private void SetButtonsInteractable(bool flag)
+        {
+            _btnMinus.interactable = flag;
+            _btnPlus.interactable = flag;
+            _btnStart.interactable = flag;
+        }
+
+        public void UpdateTimer(string msg)
+        {
+            _txtTimer.text = msg;
         }
 
         public void Show()
         {
             if (_showSequence == null) CreateShowAnimation();
 
+
+            _showSequence.Restart();
             _showSequence.Play();
         }
 
@@ -58,8 +101,20 @@ namespace Code.UI.Timer
                 _showSequence.Join(image.DOColor(Color.white, SHOW_HIDE_DURATION));
             foreach (var text in transform.GetComponentsInChildren<TMP_Text>())
                 _showSequence.Join(text.DOColor(Color.white, SHOW_HIDE_DURATION));
+            foreach (var image in transform.GetComponentsInChildren<RawImage>())
+                _showSequence.Join(image.DOColor(Color.white, SHOW_HIDE_DURATION));
         }
 
+        private void UpdateTimer(int time)
+        {
+            var total = time % (24 * 3600);
+            var h = total / 3600;
+            total %= 3600;
+            var m = total / 60;
+            var s = total % 60;
+
+            UpdateTimer($"{h:00}:{m:00}:{s:00}");
+        }
 
         private void ClearView()
         {
@@ -67,6 +122,9 @@ namespace Code.UI.Timer
                 image.color = Color.clear;
             foreach (var text in transform.GetComponentsInChildren<TMP_Text>())
                 text.color = Color.clear;
+            foreach (var image in transform.GetComponentsInChildren<RawImage>())
+                image.color = Color.clear;
+
             _canvas.enabled = false;
         }
     }

@@ -19,8 +19,6 @@ namespace Code.UI.Menu
 
         private List<Sequence> _timerButtonsSequences = new();
 
-        private bool fl = true;
-
         public event Action onAddTimer = () => { };
         public event Action<int> onOpenTimer = id => { };
 
@@ -31,21 +29,10 @@ namespace Code.UI.Menu
             _btnAddTimer.onClick.AddListener(() => onAddTimer.Invoke());
         }
 
-        private void Update()
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (fl) Hide();
-                else Show();
-
-                fl = !fl;
-            }
-        }
-
         public void Show()
         {
             _canvas.enabled = true;
-            
+
             var seq = DOTween.Sequence()
                              .SetLink(gameObject);
 
@@ -74,7 +61,7 @@ namespace Code.UI.Menu
             }
         }
 
-        public void AddTimer(Button prefab, int id)
+        public TMP_Text AddTimer(Button prefab, int id)
         {
             var button = Instantiate(prefab, _rootTimers);
 
@@ -85,6 +72,7 @@ namespace Code.UI.Menu
 
             var text = button.GetComponentInChildren<TMP_Text>();
             text.color = Color.clear;
+            text.text = "00:00:00";
 
             var duration = 0.5f;
             var sequence = DOTween.Sequence()
@@ -96,6 +84,8 @@ namespace Code.UI.Menu
             _timerButtonsSequences.Add(sequence);
 
             button.onClick.AddListener(() => onOpenTimer.Invoke(id));
+
+            return text;
         }
 
         private void ShowSequenceComplete()

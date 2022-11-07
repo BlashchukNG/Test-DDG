@@ -1,5 +1,6 @@
 ﻿using System;
 using Code.UI.Interfaces;
+using TMPro;
 using UnityEngine.UI;
 
 namespace Code.UI.Menu
@@ -9,6 +10,6 @@ namespace Code.UI.Menu
     {
         event Action onAddTimer;
         event Action<int> onOpenTimer;
-        void AddTimer(Button prefab, int id);
+        TMP_Text AddTimer(Button prefab, int id);
     }
 }

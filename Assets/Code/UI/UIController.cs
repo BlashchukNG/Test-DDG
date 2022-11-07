@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Code.Main.Interfaces;
 using Code.UI.Main;
+using TMPro;
 
 namespace Code.UI
 {
@@ -10,7 +11,7 @@ namespace Code.UI
     {
         private readonly UIData _data;
         private readonly IMainView _view;
-        private readonly List<float> _timers = new();
+        private readonly List<TimerData> _timers = new();
 
         private readonly int _maxTimers = 8;
 
@@ -25,6 +26,14 @@ namespace Code.UI
             _view.ViewMenu.onAddTimer += AddTimer;
             _view.ViewMenu.onOpenTimer += ShowTimer;
 
+            _view.ViewTimer.onCloseView += CloseTimerView;
+
+            _view.ViewMenu.Show();
+        }
+
+        private void CloseTimerView()
+        {
+            _view.ViewTimer.Hide();
             _view.ViewMenu.Show();
         }
 
@@ -34,8 +43,12 @@ namespace Code.UI
 
             if (_timersCount > _maxTimers) return;
 
-            _timers.Add(0);
-            _view.ViewMenu.AddTimer(_data.prefabMenuButton, _timersCount - 1);
+            var data = new TimerData
+            {
+                text = _view.ViewMenu.AddTimer(_data.prefabMenuButton, _timersCount - 1)
+            };
+
+            _timers.Add(data);
         }
 
         private void ShowTimer(int id)
@@ -43,21 +56,40 @@ namespace Code.UI
             _currentTimer = id;
 
             _view.ViewMenu.Hide();
+            _view.ViewTimer.SetSettings(_timers[_currentTimer]);
             _view.ViewTimer.Show();
         }
 
         public void Tick(float delta)
         {
-            for (var i = 0; i < _timers.Count; i++)
+            foreach (var timer in _timers)
             {
-                _timers[i] -= delta;
-                if (_timers[i] < 0) _timers[i] = 0;
+                if (!timer.enabled) continue;
+
+                timer.time -= delta;
+                if (timer.time < 0)
+                {
+                    timer.enabled = false;
+                    timer.time = 0;
+                }
+
+                timer.text.text = GetTimeString((int)timer.time);
             }
 
-            if (_view.ViewTimer.Enabled)
+            if (_view.ViewTimer.Enabled && _timers[_currentTimer].enabled)
             {
-                _view.ViewTimer.UpdateTimer((int)_timers[_currentTimer]);
+                _view.ViewTimer.UpdateTimer(GetTimeString((int)_timers[_currentTimer].time));
             }
+        }
+
+        private string GetTimeString(int time)
+        {
+            var total = time % (24 * 3600);
+            var h = total / 3600;
+            total %= 3600;
+            var m = total / 60;
+            var s = total % 60;
+            return $"{h:00}:{m:00}:{s:00}";
         }
     }
 }

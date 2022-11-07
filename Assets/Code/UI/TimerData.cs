@@ -1,8 +1,11 @@
-﻿namespace Code.UI
+﻿using TMPro;
+
+namespace Code.UI
 {
-    public struct TimerData
+    public sealed class TimerData
     {
         public float time;
         public bool enabled;
+        public TMP_Text text;
     }
 }
