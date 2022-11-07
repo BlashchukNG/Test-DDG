@@ -1,17 +1,21 @@
-﻿using Code.Main.Interfaces;
+﻿using System.Collections.Generic;
+using Code.Main.Interfaces;
 using Code.UI.Main;
 
 namespace Code.UI
 {
     public sealed class UIController :
-        IController
+        IController,
+        ITick
     {
         private readonly UIData _data;
         private readonly IMainView _view;
+        private readonly List<float> _timers = new();
 
         private readonly int _maxTimers = 8;
 
-        private int _timers;
+        private int _timersCount;
+        private int _currentTimer;
 
         public UIController(UIData data, IMainView view)
         {
@@ -26,15 +30,34 @@ namespace Code.UI
 
         private void AddTimer()
         {
-            _timers++;
+            _timersCount++;
 
-            if (_timers > _maxTimers) return;
+            if (_timersCount > _maxTimers) return;
 
-            _view.ViewMenu.AddTimer(_data.prefabMenuButton, _timers - 1);
+            _timers.Add(0);
+            _view.ViewMenu.AddTimer(_data.prefabMenuButton, _timersCount - 1);
         }
 
         private void ShowTimer(int id)
         {
+            _currentTimer = id;
+
+            _view.ViewMenu.Hide();
+            _view.ViewTimer.Show();
+        }
+
+        public void Tick(float delta)
+        {
+            for (var i = 0; i < _timers.Count; i++)
+            {
+                _timers[i] -= delta;
+                if (_timers[i] < 0) _timers[i] = 0;
+            }
+
+            if (_view.ViewTimer.Enabled)
+            {
+                _view.ViewTimer.UpdateTimer((int)_timers[_currentTimer]);
+            }
         }
     }
 }

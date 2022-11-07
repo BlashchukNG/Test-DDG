@@ -13,6 +13,7 @@ namespace Code.UI.Menu
     {
         private const float SHOW_HIDE_DURATION = 0.3f;
 
+        [SerializeField] private Canvas _canvas;
         [SerializeField] private RectTransform _rootTimers;
         [SerializeField] private Button _btnAddTimer;
 
@@ -43,6 +44,8 @@ namespace Code.UI.Menu
 
         public void Show()
         {
+            _canvas.enabled = true;
+            
             var seq = DOTween.Sequence()
                              .SetLink(gameObject);
 
@@ -113,6 +116,7 @@ namespace Code.UI.Menu
                 image.color = Color.clear;
             foreach (var text in transform.GetComponentsInChildren<TMP_Text>())
                 text.color = Color.clear;
+            _canvas.enabled = false;
         }
     }
 }

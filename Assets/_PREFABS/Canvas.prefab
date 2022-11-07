@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7528279364375620453
 RectTransform:
   m_ObjectHideFlags: 0
@@ -115,6 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f3724ee35c4f35ba16d8fb16ea2d39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canvas: {fileID: 8987475485911948241}
   _rootTimers: {fileID: 4829124218103338472}
   _btnAddTimer: {fileID: 1671072512576366348}
 --- !u!1 &594549576075771862
@@ -501,6 +502,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d124d4f20ae14af4a4b26f734dcd55c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canvas: {fileID: 1278977418049654162}
+  btnMinus: {fileID: 7000851099210985750}
+  btnPlus: {fileID: 1739026076715862008}
+  btnStart: {fileID: 3275870832221257642}
+  txtTimer: {fileID: 2332268745856985093}
 --- !u!1 &2079154518688386185
 GameObject:
   m_ObjectHideFlags: 0
@@ -1402,6 +1408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewMenu: {fileID: 5789719414089970562}
+  _viewTimer: {fileID: 1744317305133603049}
 --- !u!1 &7780925990525964832
 GameObject:
   m_ObjectHideFlags: 0
